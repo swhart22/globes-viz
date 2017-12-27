@@ -1,0 +1,83 @@
+body { background-color: #FFF !important; }
+
+.headline { 
+	font-family: 'Roboto', sans-serif;
+	font-size: 30px;
+	font-weight: 300;
+	color: #333;
+	margin-bottom: 20px;
+	line-height: 1.2em;
+}
+
+.blurb {
+	font-family: 'Arimo', sans-serif;
+	font-size: 18px;
+	color: #333;
+	margin: 20px 0 40px 0;
+}
+
+
+p, ul{
+	font-family: 'Arimo', sans-serif;
+	font-size: 14px;
+	color: #333;
+}
+
+.btn {
+	background-color: #23538e;
+	padding: 10px 15px;
+	font-family: 'Roboto', sans-serif;
+	font-size: 18px;
+	font-weight: 100;
+	color: #FFF;
+	border-radius: 10px;
+	display: inline-block;
+	text-shadow: 1px 1px #000000;
+}
+.btn:hover {
+	color: #FFF;
+	background-color: #000;
+	cursor: pointer;
+}
+
+.credits {
+	font-family: 'Arimo', sans-serif;
+	font-size: 12px;
+	color: #999;
+	margin-top: 10px;
+}
+/*custom for graphic*/
+#container{
+	position:relative;
+    width:620px;
+    height:1000px;
+}
+#intro{
+	width:620px;
+}
+#legend text{
+	font-family:'Arimo', sans-serif;
+	font-size:12px;
+	color:#ccc;
+}
+.label{ 
+	font-family:'Arimo', sans-serif;
+	alignment-baseline: middle;
+	font-size:12px;
+
+}
+/*for polls*/
+.excitemInfo{
+	display:inline-block;
+}
+
+@media (max-width: 960px ) {
+	#container{
+		width:100%;
+	}
+}
+
+@media (max-width: 500px ) { 
+	
+
+}
