@@ -17,7 +17,7 @@ npm run start
 ```
 If all went well, your browser should open up a tab on localhost:3000 with the development version of your map.
 
-The project comes with d3 installed, so you will be able to add an svg layer using d3 on top of the leaflet tile. See how <a href="https://gist.github.com/Sumbera/7e8e57368175a1433791" target="_blank">here</a>. You can also just use leaflet's built in tooltips and markers.  
+All changes to the graphic can be made in the `./src/js/draw.js` file.
 
 ## Production
 
