@@ -52,7 +52,7 @@ p, ul{
     width:620px;
     height:1000px;
 }
-#intro{
+#hed-intro{
 	width:620px;
 }
 #legend text{
@@ -66,18 +66,57 @@ p, ul{
 	font-size:12px;
 
 }
+#tooltip{
+	pointer-events:none;
+	background-color:#fff;
+	border-radius:3px;
+	border-color:#ccc;
+	border-style:dotted;
+	border-width:1px;
+	padding-left:6px;
+	padding-right:6px;
+	width:180px;
+	line-height:1;
+}
+#nom-title{
+	font-family:'Roboto',sans-serif;
+	font-weight:700;
+}
+#globe-cat{
+	font-size:10px;
+	color:#807F7F;
+}
+#globe-win-hook{
+	font-size:10px;
+	color:#807F7F;
+	font-weight:700;
+}
+ #osc-cat{
+	font-size:10px;
+	color:#807F7F;
+}
+#osc-win-hook{
+	font-size:10px;
+	color:#807F7F;
+	font-weight:700;
+}
 /*for polls*/
 .excitemInfo{
 	display:inline-block;
 }
 
-@media (max-width: 960px ) {
+@media (max-width: 620px ) {
 	#container{
 		width:100%;
 	}
 }
 
-@media (max-width: 500px ) { 
-	
+@media (max-width: 400px ) { 
+	#container{
+		width:100%;
+	}
+	#hed-intro{
+		width:100%;
+	}
 
 }

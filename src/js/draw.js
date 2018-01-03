@@ -9,11 +9,13 @@ import colors from './colors.js';
 
 function draw(Globes){
 	console.log(Globes);
+	Globes = Globes.filter(g => {return (g['NOM'] + ' ' +  g['Year']) != 'Kate Winslet 2009'})
 	
 	var years = d3.nest().key(d => {return d['Year'];}).key(d => {return d['GLOBES WIN_x'] + ' ' + d['OSCARS WIN_y']}).entries(Globes);
 	years.sort((x, y) => {
 		return d3.descending(+x.key, +y.key);
 	});
+	years = years.filter(d =>{return d.key != 'undefined'});
 	
 	d3.select('#wins')
 		.text(() => {
@@ -30,7 +32,7 @@ function draw(Globes){
 	var container = d3.select('#container');
 	var width = parseInt(d3.select('#container').style('width'));
 	var height = parseInt(d3.select('#container').style('height'));
-	var margin = {top: 60, left: 10, right:10, bottom: 10};
+	var margin = {top: 30, left: 10, right:10, bottom: 10};
 	var cWidth = width - margin.left - margin.right;
 	var cHeight = height - margin.top - margin.bottom;
 	var svg = container.append('svg')
@@ -39,9 +41,9 @@ function draw(Globes){
 
 	var tooltip = d3.select('body').append('div')
 		.attr('id','tooltip')
-		.html('<p id="nom-title"></p>'+
-			'<p id="cat"></p>' + 
-			'<p id="addtl-info"></p>'
+		.html('<p><span id="nom-title"></span> <span id="addtl-info"></span></p>'+
+			'<p><span id="globe-win-hook"></span><span id="globe-cat"></span></p>' + 
+			'<p><span id="osc-win-hook"></span><span id="osc-cat"></span></p>'
 			)
 		.style('display','none')
 		.style('position','absolute');
@@ -50,71 +52,11 @@ function draw(Globes){
 		.attr('transform','translate(' + margin.left + ',' + margin.top + ')');
 
 	var legend = svg.append('g')
+		.attr('transform','translate(' + margin.left + ',-5)')
 		.attr('id','legend');
 
-	var rotation = -30;
+	var rotation = 0;
 
-	legend.append('text')
-		.attr('transform', ' translate(50,' + margin.top + ') rotate('+ rotation +')')
-		.text('Won Oscar & GG');
-
-	legend.append('text')
-		.attr('transform', 'translate(140,' + margin.top + ') rotate('+ rotation +')')
-		.text('Won GG, lost Oscar');
-
-	legend.append('text')
-		.attr('transform', 'translate(300,' + margin.top + ') rotate('+ rotation +')')
-		.text('Won Oscar, lost GG');
-
-	legend.append('text')
-		.attr('transform', 'translate(450,' + margin.top + ') rotate('+ rotation +')')
-		.text('Nominated for both');
-		/*
-	var yearEls = g.selectAll('.year-el')
-		.data(years)
-		.enter()
-		.append('g')
-		.attr('class','year-el')
-		.attr('id', d => {return 'y-'+d.key})
-		.attr('transform', (d, i) => {
-			var x = 0;
-			var y = i * (120);
-
-			return 'translate(' + x + ',' + y + ')';
-
-		});
-
-	var yearTxt = yearEls
-		.append('text')
-		.attr('class','label')
-		.attr('transform','translate(0, 60)')
-		.text(d => {return d['key']});
-
-	var nomsg = yearEls.selectAll('.nomgroup')
-		.data(d => {return d['values']})
-		.enter()
-		.append('g');
-
-	var pie = d3.pie()
-		.sort(null)
-		.value
-
-	var nomnoms = nomsg.selectAll('.losers')
-		.data(d => {return d['values']})
-		.enter()
-		.append('circle')
-		.attr('r', 4)
-		.attr('transform', (d, i) => {
-			var x = i * (8 + 1);
-			var y = 60;
-
-			return 'translate('+ x + ',' + y + ')';
-		})
-		.attr('fill',colors['blue']['004']);
-		*/
-	//dreams version//
-
-	//dreams version end//
 	//reg version//
 
 	var yearEls = g.selectAll('.year-el')
@@ -137,17 +79,37 @@ function draw(Globes){
 		.attr('transform','translate(0, 11)')
 		.text(d => {return d['key']});
 
-	var rightOffset = 60;
+	var leftWidth = 100;
+	var rightOffset = 50;
+	var x0 = 0,
+	nextWidth = cWidth - leftWidth,
+	x1 = leftWidth,
+	x2 = leftWidth + (nextWidth / 3) - 20,
+	x3 = leftWidth + ((2*nextWidth) / 3) - rightOffset,
+	legendfact = 42;
+
+	var winwin = legend.append('text')
+		.attr('transform', ' translate('+(legendfact + x0)+',' + margin.top + ')')
+		.text('Won Oscar & GG');
+
+	var winlose = legend.append('text')
+		.attr('transform', 'translate('+(legendfact + x1)+',' + margin.top + ')')
+		.text('Won GG, lost Oscar');
+
+	var losewin = legend.append('text')
+		.attr('transform', 'translate('+(legendfact + x2)+',' + margin.top + ') rotate('+ rotation +')')
+		.text('Won Oscar, lost GG');
+
+	var loselose = legend.append('text')
+		.attr('transform', 'translate('+(legendfact + x3)+',' + margin.top + ') rotate('+ rotation +')')
+		.text('Nominated for both');
 
 	var nomsg = yearEls.selectAll('.nomgroup')
 		.data(d => {return d['values']})
 		.enter()
 		.append('g')
 		.attr('transform', e => {
-			var x0 = 0,
-			x1 = (cWidth / 4) - rightOffset,
-			x2 = (cWidth /2) - rightOffset,
-			x3 = ((3*cWidth) / 4) - rightOffset;
+			
 			if (e['key'] == 'Winner YES'){
 				return 'translate(' + x0 +',0)';
 			}
@@ -162,14 +124,27 @@ function draw(Globes){
 			}
 		});
 
+	var lines = yearEls.append('line')
+		.attr('transform','translate(0,'+((cHeight / years.length) - 3) +')')
+		.attr('x1', 0)
+		.attr('x2', cWidth)
+		.attr('y1', 0)
+		.attr('y2', 0)
+		.style('stroke','#ccc')
+		.style('stroke-width', 1)
+		.style('stroke-dasharray', '2,2');
+
 	var noms = nomsg.selectAll('.nom')
 		.data(d => {return d['values']})
 		.enter()
 		.append('circle')
 		.attr('class','nom')
+		.attr('id', (d, i) => {
+			return 'circ-' + d[''];
+		})
 		.attr('transform',(e, j) => {
-			var x1 = 50 + (j * (12 + 1)),
-			x2 = 50 + (j * (8+1));
+			var x1 = 50 + (j * (14 + 2)),
+			x2 = 50 + (j * (10+2));
 			if ((e['GLOBES WIN_x'] + ' ' + e['OSCARS WIN_y']) == 'Winner YES'){
 				return 'translate(' + x1 +',10)'
 			}
@@ -179,10 +154,10 @@ function draw(Globes){
 		})
 		.attr('r',d => {
 			if ((d['GLOBES WIN_x'] + ' ' + d['OSCARS WIN_y']) == 'Winner YES'){
-				return 6
+				return 7
 			}
 			else{
-				return 4
+				return 5
 			}
 		})
 		.attr('fill',d => {
@@ -193,32 +168,171 @@ function draw(Globes){
 				return colors['black']['003']
 			}
 		})
-		.attr('stroke',d => {
-			if ((d['GLOBES WIN_x'] + ' ' + d['OSCARS WIN_y']) == 'Winner YES'){
-				return colors['yellow']['004']
-			}
-			else{
-				return colors['black']['003']
-			}
-		})
-		.attr('stroke-width',1.5)
-		.on('mouseover',d => {return mouse(d);});
+		.attr('stroke','none')
+		.on('mouseover',d => {return mouse(d);})
+		.on('mouseout', d => {return mouseout(d);});
 	//reg version//
 	
 
 	function mouse (d){
-		console.log(MouseEvent.pageX)
+		d3.select('#circ-' + d[''])
+			.attr('stroke',colors['black']['001']);
+
 		d3.select('#tooltip')
 			.style('display','block');
 
 		d3.select('#nom-title')
 			.text(d['NOM']);
 
-		d3.select('#tooltip')
-			.style('left', event.clientX + 5 + 'px')
-			.style('top', event.clientY + 5 + 'px');
-	}
+		d3.select('#addtl-info')
+			.text('');
 
+		if (d['Category_y'] != 'Best Picture') {
+
+			d3.select('#addtl-info')
+				.text('(' + d['Secondary'] + ')');
+		};
+
+		d3.select('#globe-cat')
+			.text(d['Category_x']);
+
+		d3.select('#globe-win-hook')
+			.text(() => {
+				if (d['GLOBES WIN_x'] == 'Winner'){
+					return 'Won: '
+				}
+				else{
+					return 'Nominated for: '
+				}
+				
+			})
+			.style('color',() => {
+				if (d['GLOBES WIN_x'] == 'Winner'){
+					return colors['yellow']['003'];
+				}
+				else{
+					
+				}
+			});
+
+		d3.select('#osc-cat')
+			.text(d['Category_y']);
+
+		d3.select('#osc-win-hook')
+			.text(() => {
+				if (d['OSCARS WIN_y'] == 'YES'){
+					return 'Won: '
+				}
+				else{
+					return 'Nominated for: '
+				}
+				
+			})
+			.style('color',() => {
+				if (d['OSCARS WIN_y'] == 'YES'){
+					return colors['yellow']['003'];
+				}
+				else{
+					
+				}
+			});
+		//control for tooltip running off the page//
+		var tipwidth = 180;
+		var tipheight = parseInt(d3.select('#tooltip').style('height'));
+		var bodyheight = parseInt(d3.select('body').style('height'));
+		console.log(bodyheight);
+		if (tipwidth + event.pageX + 5 <= width){
+			d3.select('#tooltip')
+				.style('left', event.pageX + 5 + 'px');
+		}
+		else {
+			d3.select('#tooltip')
+				.style('left', (width - tipwidth) + 'px');
+		};
+		if (tipheight + event.pageY + 5 <= bodyheight){
+			d3.select('#tooltip')
+				.style('top', event.pageY + 5 + 'px');
+		}
+		else{
+			d3.select('#tooltip')
+				.style('top', (bodyheight - tipheight) + 'px');
+		}
+	}
+	function mouseout(d) {
+		
+		d3.select('#tooltip')
+			.style("display",'none');
+
+		d3.select('#circ-' + d[''])
+			.attr('stroke','none');
+	}
+	if (width <= 400){
+		
+		var leftWidth = 65,
+		rightOffset = 50,
+		x0 = -5,
+		nextWidth = cWidth - leftWidth,
+		x1 = leftWidth - 7,
+		x2 = leftWidth + (nextWidth / 3) - 30,
+		x3 = leftWidth + 125,
+		legendfact = 42;
+
+		winwin
+			.attr('transform', ' translate('+(legendfact + x0)+',' + (margin.top - 10) + ')')
+			.style('font-size','10px');
+
+		winlose
+			.attr('transform', 'translate('+(legendfact + x1)+',' + (margin.top + 5) + ')')
+			.style('font-size','10px');
+
+		losewin
+			.attr('transform', 'translate('+(legendfact + x2)+',' + (margin.top -10) + ')')
+			.style('font-size','10px');
+
+		loselose
+			.attr('transform', 'translate('+cWidth+',' + (margin.top + 5) + ')')
+			.style('text-anchor','end')
+			.style('font-size','10px');
+
+		nomsg
+			.attr('transform', e => {
+			
+				if (e['key'] == 'Winner YES'){
+					return 'translate(' + x0 +',0)';
+				}
+				else if (e['key'] == 'Winner NO'){
+					return 'translate(' + x1 + ',0)';
+				}
+				else if (e['key'] == 'Nominee YES'){
+					return 'translate(' + x2 + ',0)';
+				}
+				else if (e['key'] == 'Nominee NO'){
+					return 'translate(' + cWidth + ',0)';
+				}
+		});
+		noms
+			.attr('transform',(e, j) => {
+				var x1 = 50 + (j * (14 + 2)),
+				x2 = 50 + (j * (9+2));
+				if ((e['GLOBES WIN_x'] + ' ' + e['OSCARS WIN_y']) == 'Winner YES'){
+					return 'translate(' + x1 +',10)'
+				}
+				else if ((e['GLOBES WIN_x'] + ' ' + e['OSCARS WIN_y']) == 'Nominee NO'){
+					return 'translate('+ (-x2 + 50) + ',10)';
+				}
+				else{
+					return 'translate(' + x2 +',10)'
+				}
+			})
+			.attr('r',d => {
+				if ((d['GLOBES WIN_x'] + ' ' + d['OSCARS WIN_y']) == 'Winner YES'){
+					return 7
+				}
+				else{
+					return 4.5
+				}
+			})
+	}
 		
 };
 
