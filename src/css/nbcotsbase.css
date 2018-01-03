@@ -55,10 +55,10 @@ p, ul{
 #hed-intro{
 	width:620px;
 }
-#legend text{
+.leg-label{
 	font-family:'Arimo', sans-serif;
 	font-size:12px;
-	color:#ccc;
+	
 }
 .label{ 
 	font-family:'Arimo', sans-serif;

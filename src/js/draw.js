@@ -86,23 +86,39 @@ function draw(Globes){
 	x1 = leftWidth,
 	x2 = leftWidth + (nextWidth / 3) - 20,
 	x3 = leftWidth + ((2*nextWidth) / 3) - rightOffset,
-	legendfact = 42;
+	legendfact = 53;
 
-	var winwin = legend.append('text')
-		.attr('transform', ' translate('+(legendfact + x0)+',' + margin.top + ')')
-		.text('Won Oscar & GG');
+	var winwin = d3.select('#container')
+		.append('div')
+		.attr('class','leg-label')
+		.style('position','absolute')
+		.style('top', 0 + 'px')
+		.style('left', legendfact + x0 + 'px')
+		.html('Won the Oscar<br />Won the Globe');
 
-	var winlose = legend.append('text')
-		.attr('transform', 'translate('+(legendfact + x1)+',' + margin.top + ')')
-		.text('Won GG, lost Oscar');
+	var winlose = d3.select('#container')
+		.append('div')
+		.attr('class','leg-label')
+		.style('position','absolute')
+		.style('top', 0 + 'px')
+		.style('left', legendfact + x1 + 'px')
+		.html('Lost the Oscar<br />Won the Globe');
 
-	var losewin = legend.append('text')
-		.attr('transform', 'translate('+(legendfact + x2)+',' + margin.top + ') rotate('+ rotation +')')
-		.text('Won Oscar, lost GG');
+	var losewin = d3.select('#container')
+		.append('div')
+		.attr('class','leg-label')
+		.style('position','absolute')
+		.style('top', 0 + 'px')
+		.style('left', legendfact + x2 + 'px')
+		.html('Won the Oscar<br />Lost the Globe');
 
-	var loselose = legend.append('text')
-		.attr('transform', 'translate('+(legendfact + x3)+',' + margin.top + ') rotate('+ rotation +')')
-		.text('Nominated for both');
+	var loselose = d3.select('#container')
+		.append('div')
+		.attr('class','leg-label')
+		.style('position','absolute')
+		.style('top', 0 + 'px')
+		.style('left', legendfact + x3 + 'px')
+		.html('Nominated for both');
 
 	var nomsg = yearEls.selectAll('.nomgroup')
 		.data(d => {return d['values']})
@@ -275,24 +291,25 @@ function draw(Globes){
 		x1 = leftWidth - 7,
 		x2 = leftWidth + (nextWidth / 3) - 30,
 		x3 = leftWidth + 125,
-		legendfact = 42;
+		legendfact = 50;
 
 		winwin
-			.attr('transform', ' translate('+(legendfact + x0)+',' + (margin.top - 10) + ')')
-			.style('font-size','10px');
+			.style('left',(legendfact + x0)+ 'px')
+			.style('font-size','9.5px');
 
 		winlose
-			.attr('transform', 'translate('+(legendfact + x1)+',' + (margin.top + 5) + ')')
-			.style('font-size','10px');
+			.style('left', (legendfact + x1 + 5)+'px')
+			.style('font-size','9.5px');
 
 		losewin
-			.attr('transform', 'translate('+(legendfact + x2)+',' + (margin.top -10) + ')')
-			.style('font-size','10px');
+			.style('left', (legendfact + x2)+'px')
+			.style('font-size','9.5px');
 
 		loselose
-			.attr('transform', 'translate('+cWidth+',' + (margin.top + 5) + ')')
-			.style('text-anchor','end')
-			.style('font-size','10px');
+			.style('left', 'auto')
+			.style('right', '0px')
+			.style('text-align','right')
+			.style('font-size','9.5px');
 
 		nomsg
 			.attr('transform', e => {
